@@ -1,0 +1,8 @@
+{
+  "godot_port": 6505,
+  "mode": "full",
+  "log_level": "info",
+  "timeout": 30000,
+  "reconnect_interval": 3000,
+  "disabled_tools": []
+}

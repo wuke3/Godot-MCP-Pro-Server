@@ -1,0 +1,37 @@
+{
+  "name": "godot-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Godot 4 - Reverse engineered from godot-mcp-pro",
+  "main": "build/index.js",
+  "bin": {
+    "godot-mcp": "build/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "setup": "node build/setup.js",
+    "start": "node build/index.js",
+    "cli": "node build/cli.js"
+  },
+  "keywords": [
+    "godot",
+    "mcp",
+    "godot4",
+    "game-engine"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "ws": "^8.18.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/ws": "^8.5.10",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
