@@ -49,7 +49,7 @@ node build/cli.js node add --type CharacterBody3D --name Player
 
 ## License
 
-MIT License - See LICENSE file for details (if provided).
+MIT License - See LICENSE file for details.
 
 ## Disclaimer
 
