@@ -24,6 +24,7 @@ export const themeTools: Record<string, ToolDefinition> = {
   set_theme_constant: { name: "set_theme_constant", description: "Set constant", inputSchema: { type: "object", properties: { node_path: { type: "string" }, constant_name: { type: "string" }, value: { type: "number" } }, required: ["node_path", "constant_name", "value"] } },
   set_theme_font_size: { name: "set_theme_font_size", description: "Set font size", inputSchema: { type: "object", properties: { node_path: { type: "string" }, font_type: { type: "string" }, size_name: { type: "string" }, size: { type: "number" } }, required: ["node_path", "font_type", "size_name", "size"] } },
   set_theme_stylebox: { name: "set_theme_stylebox", description: "Set stylebox", inputSchema: { type: "object", properties: { node_path: { type: "string" }, stylebox_type: { type: "string" }, bg_color: { type: "string" }, border_color: { type: "string" } }, required: ["node_path", "stylebox_type"] } },
+  setup_control: { name: "setup_control", description: "Setup control node theme", inputSchema: { type: "object", properties: { node_path: { type: "string" }, theme_path: { type: "string" }, custom_styles: { type: "object" } }, required: ["node_path"] } },
   get_theme_info: { name: "get_theme_info", description: "Get theme info", inputSchema: { type: "object", properties: { node_path: { type: "string" } }, required: ["node_path"] } },
 };
 
@@ -36,11 +37,10 @@ export const batchTools: Record<string, ToolDefinition> = {
   find_nodes_by_type: { name: "find_nodes_by_type", description: "Find by type", inputSchema: { type: "object", properties: { type: { type: "string" } }, required: ["type"] } },
   find_signal_connections: { name: "find_signal_connections", description: "Find signals", inputSchema: { type: "object", properties: { node_path: { type: "string" } } } },
   batch_set_property: { name: "batch_set_property", description: "Batch set prop", inputSchema: { type: "object", properties: { type: { type: "string" }, property: { type: "string" }, value: {}, recursive: { type: "boolean" } }, required: ["type", "property", "value"] } },
+  batch_add_nodes: { name: "batch_add_nodes", description: "Batch add nodes", inputSchema: { type: "object", properties: { parent_path: { type: "string" }, nodes: { type: "array" } }, required: ["parent_path", "nodes"] } },
   find_node_references: { name: "find_node_references", description: "Find references", inputSchema: { type: "object", properties: { node_path: { type: "string" } }, required: ["node_path"] } },
   get_scene_dependencies: { name: "get_scene_dependencies", description: "Get dependencies", inputSchema: { type: "object", properties: { path: { type: "string" } }, required: ["path"] } },
   cross_scene_set_property: { name: "cross_scene_set_property", description: "Cross-scene set", inputSchema: { type: "object", properties: { resource_path: { type: "string" }, property: { type: "string" }, value: {} }, required: ["resource_path", "property", "value"] } },
-  find_script_references: { name: "find_script_references", description: "Find script refs", inputSchema: { type: "object", properties: { path: { type: "string" } }, required: ["path"] } },
-  detect_circular_dependencies: { name: "detect_circular_dependencies", description: "Detect cycles", inputSchema: { type: "object", properties: {} } },
 };
 
 export const shaderTools: Record<string, ToolDefinition> = {
@@ -63,8 +63,6 @@ export const resourceTools: Record<string, ToolDefinition> = {
   edit_resource: { name: "edit_resource", description: "Edit resource", inputSchema: { type: "object", properties: { path: { type: "string" }, properties: { type: "object" } }, required: ["path", "properties"] } },
   create_resource: { name: "create_resource", description: "Create resource", inputSchema: { type: "object", properties: { path: { type: "string" }, type: { type: "string" }, properties: { type: "object" } }, required: ["path", "type"] } },
   get_resource_preview: { name: "get_resource_preview", description: "Get preview", inputSchema: { type: "object", properties: { path: { type: "string" }, size: { type: "number" } }, required: ["path"] } },
-  add_autoload: { name: "add_autoload", description: "Add autoload", inputSchema: { type: "object", properties: { name: { type: "string" }, path: { type: "string" } }, required: ["name", "path"] } },
-  remove_autoload: { name: "remove_autoload", description: "Remove autoload", inputSchema: { type: "object", properties: { name: { type: "string" } }, required: ["name"] } },
 };
 
 export const physicsTools: Record<string, ToolDefinition> = {
@@ -132,8 +130,26 @@ export const analysisTools: Record<string, ToolDefinition> = {
   analyze_signal_flow: { name: "analyze_signal_flow", description: "Analyze signals", inputSchema: { type: "object", properties: { path: { type: "string" }, max_depth: { type: "number" } }, required: ["path"] } },
   find_unused_resources: { name: "find_unused_resources", description: "Find unused", inputSchema: { type: "object", properties: { path: { type: "string" } } } },
   get_project_statistics: { name: "get_project_statistics", description: "Get stats", inputSchema: { type: "object", properties: { path: { type: "string" } } } },
+  find_script_references: { name: "find_script_references", description: "Find all references to a script", inputSchema: { type: "object", properties: { script_path: { type: "string" }, search_path: { type: "string" } }, required: ["script_path"] } },
+  detect_circular_dependencies: { name: "detect_circular_dependencies", description: "Detect circular dependencies", inputSchema: { type: "object", properties: { path: { type: "string" } } } },
 };
 
 export const testTools: Record<string, ToolDefinition> = {
-  run_test_scenario: { name: "run_test_scenario", description: "Run test", inputSchema: { type: "object", properties: { scenario_name: { type: "string" }, scenario_path: { type: "string" }, params: { type: "object" } }, required: ["scenario_name"] } },
+  run_test_scenario: { name: "run_test_scenario", description: "Run automated test scenario", inputSchema: { type: "object", properties: { scenario_name: { type: "string" }, scenario_path: { type: "string" }, params: { type: "object" } }, required: ["scenario_name"] } },
+  assert_node_state: { name: "assert_node_state", description: "Assert node property values", inputSchema: { type: "object", properties: { node_path: { type: "string" }, assertions: { type: "object" } }, required: ["node_path", "assertions"] } },
+  assert_screen_text: { name: "assert_screen_text", description: "Check for text on screen", inputSchema: { type: "object", properties: { text: { type: "string" }, partial: { type: "boolean" }, timeout: { type: "number" } }, required: ["text"] } },
+  compare_screenshots: { name: "compare_screenshots", description: "Compare two screenshots", inputSchema: { type: "object", properties: { path_a: { type: "string" }, path_b: { type: "string" }, threshold: { type: "number" } }, required: ["path_a", "path_b"] } },
+  run_stress_test: { name: "run_stress_test", description: "Run performance stress test", inputSchema: { type: "object", properties: { test_type: { type: "string" }, duration: { type: "number" }, params: { type: "object" } }, required: ["test_type"] } },
+  get_test_report: { name: "get_test_report", description: "Get test results report", inputSchema: { type: "object", properties: { format: { type: "string", enum: ["json", "text", "html"] } } } },
+};
+
+export const inputMapTools: Record<string, ToolDefinition> = {
+  get_input_actions: { name: "get_input_actions", description: "List all input actions", inputSchema: { type: "object", properties: { filter: { type: "string" }, include_builtin: { type: "boolean" } } } },
+  set_input_action: { name: "set_input_action", description: "Create/modify input action", inputSchema: { type: "object", properties: { action: { type: "string" }, events: { type: "array" }, deadzone: { type: "number" } }, required: ["action", "events"] } },
+};
+
+export const androidTools: Record<string, ToolDefinition> = {
+  list_android_devices: { name: "list_android_devices", description: "List Android devices visible to adb", inputSchema: { type: "object", properties: {} } },
+  get_android_preset_info: { name: "get_android_preset_info", description: "Read Android export preset metadata", inputSchema: { type: "object", properties: { preset_name: { type: "string" }, preset_index: { type: "number" } } } },
+  deploy_to_android: { name: "deploy_to_android", description: "Export APK, install on device, and optionally launch", inputSchema: { type: "object", properties: { preset_name: { type: "string" }, preset_index: { type: "number" }, device_serial: { type: "string" }, debug: { type: "boolean" }, launch: { type: "boolean" }, skip_export: { type: "boolean" } } } },
 };

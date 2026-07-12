@@ -2,13 +2,13 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
-import { godotClient } from "./websocket-client.js";
+import { godotServer } from "./websocket-server.js";
 import { getTools, getToolByName } from "./tools/index.js";
 import { parseArgs } from "./utils/config.js";
 import { logger } from "./utils/logger.js";
 import { ServerMode } from "./protocol/mcp-types.js";
 
-class GodotMCPServer {
+export class GodotMCPServer {
   private server: Server;
   private mode: ServerMode;
   private tools: ReturnType<typeof getTools>;
@@ -41,7 +41,7 @@ class GodotMCPServer {
         return { content: [{ type: "text" as const, text: JSON.stringify({ error: { code: -32601, message: `Tool not found: ${name}` } }) }], isError: true };
       }
       try {
-        const result = await godotClient.sendCommand(name, args || {});
+        const result = await godotServer.sendCommand(name, args || {});
         if (result.error) return { content: [{ type: "text" as const, text: JSON.stringify(result.error) }], isError: true };
         return { content: [{ type: "text" as const, text: JSON.stringify(result.result || {}, null, 2) }] };
       } catch (error) {
@@ -52,18 +52,26 @@ class GodotMCPServer {
   }
 
   async start(): Promise<void> {
-    godotClient.start();
-    godotClient.on("connected", (port: number) => logger.info(`Connected to Godot on port ${port}`));
-    godotClient.on("disconnected", (port: number) => logger.warn(`Disconnected from Godot on port ${port}`));
+    godotServer.start();
+    godotServer.on("connected", (port: number) => logger.info(`Godot client connected on port ${port}`));
+    godotServer.on("disconnected", (port: number) => logger.warn(`Godot client disconnected from port ${port}`));
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
     logger.info("[MCP Server] Server started and listening on stdio");
   }
 
   stop(): void {
-    godotClient.stop();
+    godotServer.stop();
     this.server.close();
     logger.info("[MCP Server] Server stopped");
+  }
+
+  getTools(): Record<string, unknown> {
+    return this.tools;
+  }
+
+  getMode(): ServerMode {
+    return this.mode;
   }
 }
 

@@ -69,7 +69,7 @@ export interface ToolProperty {
   [key: string]: unknown;
 }
 
-export type ServerMode = "full" | "lite" | "minimal";
+export type ServerMode = "full" | "3d" | "lite" | "minimal";
 
 export interface ServerConfig {
   port?: number;

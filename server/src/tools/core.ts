@@ -26,20 +26,23 @@ export const sceneTools: Record<string, ToolDefinition> = {
 };
 
 export const nodeTools: Record<string, ToolDefinition> = {
-  add_node: { name: "add_node", description: "Add new node", inputSchema: { type: "object", properties: { type: { type: "string" }, parent_path: { type: "string" }, name: { type: "string" }, properties: { type: "object" } }, required: ["type"] } },
-  delete_node: { name: "delete_node", description: "Delete node", inputSchema: { type: "object", properties: { node_path: { type: "string" } }, required: ["node_path"] } },
-  duplicate_node: { name: "duplicate_node", description: "Duplicate node", inputSchema: { type: "object", properties: { node_path: { type: "string" }, name: { type: "string" } }, required: ["node_path"] } },
+  add_node: { name: "add_node", description: "Add new node with type and properties", inputSchema: { type: "object", properties: { type: { type: "string" }, parent_path: { type: "string" }, name: { type: "string" }, properties: { type: "object" } }, required: ["type"] } },
+  delete_node: { name: "delete_node", description: "Delete node (with undo support)", inputSchema: { type: "object", properties: { node_path: { type: "string" } }, required: ["node_path"] } },
+  duplicate_node: { name: "duplicate_node", description: "Duplicate node and children", inputSchema: { type: "object", properties: { node_path: { type: "string" }, name: { type: "string" } }, required: ["node_path"] } },
   move_node: { name: "move_node", description: "Move/reparent node", inputSchema: { type: "object", properties: { node_path: { type: "string" }, new_parent_path: { type: "string" } }, required: ["node_path", "new_parent_path"] } },
-  update_property: { name: "update_property", description: "Set node property", inputSchema: { type: "object", properties: { node_path: { type: "string" }, property: { type: "string" }, value: {} }, required: ["node_path", "property", "value"] } },
-  get_node_properties: { name: "get_node_properties", description: "Get node properties", inputSchema: { type: "object", properties: { node_path: { type: "string" }, category: { type: "string" } }, required: ["node_path"] } },
-  add_resource: { name: "add_resource", description: "Add resource to node", inputSchema: { type: "object", properties: { node_path: { type: "string" }, property: { type: "string" }, resource_type: { type: "string" }, resource_properties: { type: "object" } }, required: ["node_path", "property", "resource_type"] } },
-  set_anchor_preset: { name: "set_anchor_preset", description: "Set Control anchor", inputSchema: { type: "object", properties: { node_path: { type: "string" }, preset: { type: "string" }, keep_offsets: { type: "boolean" } }, required: ["node_path", "preset"] } },
-  rename_node: { name: "rename_node", description: "Rename node", inputSchema: { type: "object", properties: { node_path: { type: "string" }, new_name: { type: "string" } }, required: ["node_path", "new_name"] } },
-  connect_signal: { name: "connect_signal", description: "Connect signal", inputSchema: { type: "object", properties: { node_path: { type: "string" }, signal: { type: "string" }, target_path: { type: "string" }, method: { type: "string" } }, required: ["node_path", "signal", "target_path", "method"] } },
-  disconnect_signal: { name: "disconnect_signal", description: "Disconnect signal", inputSchema: { type: "object", properties: { node_path: { type: "string" }, signal: { type: "string" }, target_path: { type: "string" }, method: { type: "string" } }, required: ["node_path", "signal", "target_path", "method"] } },
-  get_node_groups: { name: "get_node_groups", description: "Get node groups", inputSchema: { type: "object", properties: { node_path: { type: "string" } }, required: ["node_path"] } },
-  set_node_groups: { name: "set_node_groups", description: "Set node groups", inputSchema: { type: "object", properties: { node_path: { type: "string" }, add: { type: "array", items: { type: "string" } }, remove: { type: "array", items: { type: "string" } } }, required: ["node_path"] } },
-  find_nodes_in_group: { name: "find_nodes_in_group", description: "Find nodes in group", inputSchema: { type: "object", properties: { group: { type: "string" } }, required: ["group"] } },
+  update_property: { name: "update_property", description: "Set any property (auto type parsing)", inputSchema: { type: "object", properties: { node_path: { type: "string" }, property: { type: "string" }, value: {} }, required: ["node_path", "property", "value"] } },
+  get_node_properties: { name: "get_node_properties", description: "Get all node properties", inputSchema: { type: "object", properties: { node_path: { type: "string" }, category: { type: "string" } }, required: ["node_path"] } },
+  add_resource: { name: "add_resource", description: "Add Shape/Material/etc to node", inputSchema: { type: "object", properties: { node_path: { type: "string" }, property: { type: "string" }, resource_type: { type: "string" }, resource_properties: { type: "object" } }, required: ["node_path", "property", "resource_type"] } },
+  set_anchor_preset: { name: "set_anchor_preset", description: "Set Control anchor preset", inputSchema: { type: "object", properties: { node_path: { type: "string" }, preset: { type: "string" }, keep_offsets: { type: "boolean" } }, required: ["node_path", "preset"] } },
+  rename_node: { name: "rename_node", description: "Rename a node in the scene", inputSchema: { type: "object", properties: { node_path: { type: "string" }, new_name: { type: "string" } }, required: ["node_path", "new_name"] } },
+  connect_signal: { name: "connect_signal", description: "Connect signal between nodes", inputSchema: { type: "object", properties: { source_path: { type: "string" }, signal_name: { type: "string" }, target_path: { type: "string" }, method_name: { type: "string" } }, required: ["source_path", "signal_name", "target_path", "method_name"] } },
+  disconnect_signal: { name: "disconnect_signal", description: "Disconnect signal connection", inputSchema: { type: "object", properties: { source_path: { type: "string" }, signal_name: { type: "string" }, target_path: { type: "string" }, method_name: { type: "string" } }, required: ["source_path", "signal_name", "target_path", "method_name"] } },
+  get_node_groups: { name: "get_node_groups", description: "Get groups a node belongs to", inputSchema: { type: "object", properties: { node_path: { type: "string" } }, required: ["node_path"] } },
+  set_node_groups: { name: "set_node_groups", description: "Set node group membership", inputSchema: { type: "object", properties: { node_path: { type: "string" }, groups: { type: "array", items: { type: "string" } } }, required: ["node_path", "groups"] } },
+  find_nodes_in_group: { name: "find_nodes_in_group", description: "Find all nodes in a group", inputSchema: { type: "object", properties: { group: { type: "string" } }, required: ["group"] } },
+  get_editor_selection: { name: "get_editor_selection", description: "Get currently selected scene nodes", inputSchema: { type: "object", properties: { top_only: { type: "boolean" } } } },
+  select_nodes: { name: "select_nodes", description: "Select, focus, and inspect scene nodes", inputSchema: { type: "object", properties: { node_paths: { type: "array", items: { type: "string" } }, node_path: { type: "string" }, mode: { type: "string", enum: ["replace", "add", "remove"] }, inspect: { type: "boolean" }, focus: { type: "boolean" }, inspector_only: { type: "boolean" }, for_property: { type: "string" } } } },
+  clear_editor_selection: { name: "clear_editor_selection", description: "Clear the editor scene selection", inputSchema: { type: "object", properties: {} } },
 };
 
 export const scriptTools: Record<string, ToolDefinition> = {
@@ -54,7 +57,7 @@ export const scriptTools: Record<string, ToolDefinition> = {
 };
 
 export const editorTools: Record<string, ToolDefinition> = {
-  get_editor_errors: { name: "get_editor_errors", description: "Get editor errors", inputSchema: { type: "object", properties: {} } },
+  get_editor_errors: { name: "get_editor_errors", description: "Get editor errors", inputSchema: { type: "object", properties: { max_lines: { type: "number" } } } },
   get_editor_screenshot: { name: "get_editor_screenshot", description: "Capture editor viewport", inputSchema: { type: "object", properties: { path: { type: "string" } } } },
   get_game_screenshot: { name: "get_game_screenshot", description: "Capture game viewport", inputSchema: { type: "object", properties: { path: { type: "string" }, half_resolution: { type: "boolean" } } } },
   execute_editor_script: { name: "execute_editor_script", description: "Execute GDScript in editor", inputSchema: { type: "object", properties: { code: { type: "string" } }, required: ["code"] } },
@@ -63,16 +66,18 @@ export const editorTools: Record<string, ToolDefinition> = {
   reload_plugin: { name: "reload_plugin", description: "Reload MCP plugin", inputSchema: { type: "object", properties: {} } },
   reload_project: { name: "reload_project", description: "Rescan filesystem", inputSchema: { type: "object", properties: {} } },
   get_output_log: { name: "get_output_log", description: "Get output log", inputSchema: { type: "object", properties: { clear: { type: "boolean" } } } },
+  compare_screenshots: { name: "compare_screenshots", description: "Compare two screenshots with SSIM/PSNR", inputSchema: { type: "object", properties: { image_a: { type: "string" }, image_b: { type: "string" }, method: { type: "string", enum: ["ssim", "psnr", "mse"] } }, required: ["image_a", "image_b"] } },
+  set_auto_dismiss: { name: "set_auto_dismiss", description: "Auto-dismiss editor popups", inputSchema: { type: "object", properties: { enabled: { type: "boolean" }, timeout_ms: { type: "number" } } } },
+  get_editor_camera: { name: "get_editor_camera", description: "Get editor camera transform", inputSchema: { type: "object", properties: {} } },
+  set_editor_camera: { name: "set_editor_camera", description: "Set editor camera transform", inputSchema: { type: "object", properties: { position: { type: "object" }, look_at: { type: "object" }, fov: { type: "number" } } } },
 };
 
 export const inputTools: Record<string, ToolDefinition> = {
-  simulate_key: { name: "simulate_key", description: "Simulate keyboard", inputSchema: { type: "object", properties: { keycode: { type: "string" }, pressed: { type: "boolean" }, shift: { type: "boolean" }, ctrl: { type: "boolean" }, alt: { type: "boolean" } }, required: ["keycode"] } },
-  simulate_mouse_click: { name: "simulate_mouse_click", description: "Simulate mouse click", inputSchema: { type: "object", properties: { x: { type: "number" }, y: { type: "number" }, button: { type: "number" }, pressed: { type: "boolean" }, double_click: { type: "boolean" } }, required: ["x", "y"] } },
-  simulate_mouse_move: { name: "simulate_mouse_move", description: "Simulate mouse move", inputSchema: { type: "object", properties: { x: { type: "number" }, y: { type: "number" }, relative_x: { type: "number" }, relative_y: { type: "number" }, button_mask: { type: "number" } }, required: ["x", "y"] } },
-  simulate_action: { name: "simulate_action", description: "Simulate Input action", inputSchema: { type: "object", properties: { action: { type: "string" }, pressed: { type: "boolean" }, strength: { type: "number" } }, required: ["action"] } },
-  simulate_sequence: { name: "simulate_sequence", description: "Sequence input events", inputSchema: { type: "object", properties: { sequence_events: { type: "array" }, frame_delay: { type: "number" } }, required: ["sequence_events"] } },
-  get_input_actions: { name: "get_input_actions", description: "List input actions", inputSchema: { type: "object", properties: {} } },
-  set_input_action: { name: "set_input_action", description: "Create/modify action", inputSchema: { type: "object", properties: { action: { type: "string" }, events: { type: "array" } }, required: ["action"] } },
+  simulate_key: { name: "simulate_key", description: "Simulate keyboard key press/release", inputSchema: { type: "object", properties: { keycode: { type: "string" }, pressed: { type: "boolean" }, shift: { type: "boolean" }, ctrl: { type: "boolean" }, alt: { type: "boolean" } }, required: ["keycode"] } },
+  simulate_mouse_click: { name: "simulate_mouse_click", description: "Simulate mouse click at position", inputSchema: { type: "object", properties: { x: { type: "number" }, y: { type: "number" }, button: { type: "number" }, pressed: { type: "boolean" }, double_click: { type: "boolean" } }, required: ["x", "y"] } },
+  simulate_mouse_move: { name: "simulate_mouse_move", description: "Simulate mouse movement", inputSchema: { type: "object", properties: { x: { type: "number" }, y: { type: "number" }, relative_x: { type: "number" }, relative_y: { type: "number" }, button_mask: { type: "number" } }, required: ["x", "y"] } },
+  simulate_action: { name: "simulate_action", description: "Simulate Godot Input Action", inputSchema: { type: "object", properties: { action: { type: "string" }, pressed: { type: "boolean" }, strength: { type: "number" } }, required: ["action"] } },
+  simulate_sequence: { name: "simulate_sequence", description: "Sequence of input events with frame delays", inputSchema: { type: "object", properties: { sequence_events: { type: "array" }, frame_delay: { type: "number" } }, required: ["sequence_events"] } },
 };
 
 export const runtimeTools: Record<string, ToolDefinition> = {

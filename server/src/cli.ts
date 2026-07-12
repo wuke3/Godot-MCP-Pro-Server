@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { godotClient } from "./websocket-client.js";
+import { godotServer } from "./websocket-server.js";
 import { getTools } from "./tools/index.js";
 import { logger } from "./utils/logger.js";
 
@@ -54,20 +54,20 @@ class GodotCLI {
 
   private async runTool(toolName: string, params: Record<string, unknown>): Promise<void> {
     console.log(`[CLI] Executing: ${toolName}`, params);
-    godotClient.start();
+    godotServer.start();
     await new Promise<void>((resolve) => {
-      const check = setInterval(() => { if (godotClient.getConnectedPort() !== null) { clearInterval(check); resolve(); } }, 100);
-      setTimeout(() => { clearInterval(check); resolve(); }, 5000);
+      const check = setInterval(() => { if (godotServer.getConnectedPort() !== null) { clearInterval(check); resolve(); } }, 100);
+      setTimeout(() => { clearInterval(check); resolve(); }, 10000);
     });
     try {
-      const result = await godotClient.sendCommand(toolName, params);
+      const result = await godotServer.sendCommand(toolName, params);
       if (result.error) { console.error(`[CLI] Error:`, result.error.message); process.exit(1); }
       console.log(`[CLI] Result:`, JSON.stringify(result.result || {}, null, 2));
     } catch (error) {
       console.error(`[CLI] Failed:`, error);
       process.exit(1);
     } finally {
-      godotClient.stop();
+      godotServer.stop();
     }
   }
 
