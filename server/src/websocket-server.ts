@@ -5,7 +5,7 @@ import { createRequest, parseResponse, isErrorResponse } from "./protocol/jsonrp
 
 const BASE_PORT = 6505;
 const MAX_PORT = 6514;
-const HEARTBEAT_INTERVAL = 10000;
+const HEARTBEAT_INTERVAL = 5000;
 const INACTIVITY_TIMEOUT = 30000;
 
 export class GodotWebSocketServer extends EventEmitter {

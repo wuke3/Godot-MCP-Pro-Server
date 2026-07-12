@@ -40,9 +40,9 @@ Options:
   --help, -h        Show this help
 
 Tool Modes:
-  Full     - All 175 tools (Claude Code, Cline, VS Code Copilot, Cursor)
-  3D       - 103 tools with 3D focus (Antigravity and other 100-tool-limit clients)
-  Lite     - 84 essential tools (Windsurf, JetBrains Junie, Gemini CLI)
+  Full     - All 174 tools (Claude Code, Cline, VS Code Copilot, Cursor)
+  3D       - 134 tools with 3D focus (Antigravity and other 100-tool-limit clients)
+  Lite     - 83 essential tools (Windsurf, JetBrains Junie, Gemini CLI)
   Minimal  - 35 core tools (OpenCode, local LLMs with small context)
 `);
 }

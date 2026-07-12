@@ -72,21 +72,37 @@ class GodotCLI {
   }
 
   private printHelp(): void {
+    const tools = this.tools;
+    const groups: Record<string, string[]> = {};
+    for (const name of Object.keys(tools)) {
+      const group = name.split("_")[0];
+      if (!groups[group]) groups[group] = [];
+      groups[group].push(name);
+    }
+    const groupList = Object.keys(groups).sort();
+    const toolCount = Object.keys(tools).length;
+
     console.log(`
-Godot MCP CLI
+Godot MCP CLI (${toolCount} tools available)
 
 Usage:
   node cli.js <group> <command> [options]
+  node cli.js <tool_name> [options]
 
-Groups:
-  project, scene, node, script, editor, input, runtime
+Options:
+  --<param> <value>   Pass parameter to tool
+  -<param> <value>    Short form parameter
+  --help              Show this help
+
+Groups (${groupList.length}):
+${groupList.map(g => `  ${g} (${groups[g].length} tools)`).join("\n")}
 
 Examples:
   node cli.js project info
-  node cli.js scene play --mode main
+  node cli.js scene play
   node cli.js node add --type CharacterBody3D --name Player
-
-Run 'node cli.js help' for more info.
+  node cli.js get_editor_errors
+  node cli.js simulate_key --keycode KEY_SPACE --pressed true
 `);
   }
 }
