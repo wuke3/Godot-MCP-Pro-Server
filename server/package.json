@@ -1,7 +1,7 @@
 {
   "name": "godot-mcp-server",
   "version": "1.0.0",
-  "description": "MCP server for Godot 4 - Reverse engineered from godot-mcp-pro",
+  "description": "MCP server for Godot 4 game engine development",
   "main": "build/index.js",
   "bin": {
     "godot-mcp": "build/cli.js"
